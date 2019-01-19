@@ -1,3 +1,24 @@
 body {
-	background-color: blue;
+	background-color: skyblue;
+	font-family: 'News Cycle', sans-serif;
+}
+
+#current-weather {
+	height: 500px;
+	width: 500px;
+	background-color: pink;
+	display: flex;
+	flex-flow: column;
+	text-align: center;
+	justify-content: space-between;
+}
+
+#current-weather-photo {
+	height: 200px;
+	display: block;
+	margin: auto;
+}
+
+#city-name {
+	font-size: 40px;
 }
