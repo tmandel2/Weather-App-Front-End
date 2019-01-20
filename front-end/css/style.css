@@ -3,9 +3,18 @@ body {
 	font-family: 'News Cycle', sans-serif;
 }
 
+form {
+	text-align: center;
+	height: 45px;
+}
+
+input, button {
+	font-size: 24px;
+}
+
 #current-weather {
-	height: 500px;
-	width: 500px;
+	height: 400px;
+	width: 100vw;
 	background-color: pink;
 	display: flex;
 	flex-flow: column;
@@ -21,4 +30,35 @@ body {
 
 #city-name {
 	font-size: 40px;
+}
+
+#five-day-forecast {
+	width: 100vw;
+	height: 150px;
+	background-color: lightgreen;
+	display: flex;
+	flex-flow: row;
+	justify-content: space-around;
+}
+
+#day1-info, #day2-info, #day3-info, #day4-info, #day5-info {
+	text-align: center;
+	display: flex;
+	flex-flow: column;
+	align-content: center;
+	justify-content: space-between;
+	width: 20%;
+	border: 1px solid gray;
+}
+
+#day1-temps, #day2-temps, #day3-temps, #day4-temps, #day5-temps {
+	display: flex;
+	justify-content: space-around;
+	text-align: center;
+}
+
+.pictures {
+	display: flex;
+	justify-content: center;
+	align-content: center;
 }
