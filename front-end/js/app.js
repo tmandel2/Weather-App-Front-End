@@ -45,22 +45,53 @@ const weatherApp = {
 				let farenheit = (kelvin - 273.15) * 9 / 5 + 32;
 				return Math.round(farenheit);
 			},
-			success (forecastData) {
-				console.log(forecastData.list.length);
-				let firstEntry = forecastData.list[0];
-				forecastData.list.unshift(firstEntry);
+			mostFrequent (weatherArray) {
+				let most = 1;
+				let number = 0;
+				let counterArr;
+				for (let i=0; i<weatherArray.length; i++) {
+						for (let j=i; j<weatherArray.length; j++) {
+							if (weatherArray[i].weather[0].main == weatherArray[j].weather[0].main) {
+							number++;
+							}
+							if (most < number) {
+							most = number; 
+							counterArr = weatherArray[i].weather[0];
+							}
+						}
+					number = 0;
+				}
+				console.log(counterArr);
+				return counterArr;
+			},
+			updatePage (forecastData) {
 				for (let i = 0; i < 5; i++) {
-					let firstEntry = forecastData.list[i * 8]
-					let day = new Date(forecastData.list[i*8].dt_txt);
-					let minTemp = this.makeFarenheit(Math.min(forecastData.list[i * 8].main.temp_min, forecastData.list[i * 8 + 1].main.temp_min, forecastData.list[i * 8 + 2].main.temp_min, forecastData.list[i * 8 + 3].main.temp_min, forecastData.list[i * 8 + 4].main.temp_min, forecastData.list[i * 8 + 5].main.temp_min, forecastData.list[i * 8 + 6].main.temp_min), forecastData.list[i * 8 + 7].main.temp_min);
-					let maxTemp = this.makeFarenheit(Math.max(forecastData.list[i * 8].main.temp_max, forecastData.list[i * 8 + 1].main.temp_max, forecastData.list[i * 8 + 2].main.temp_max, forecastData.list[i * 8 + 3].main.temp_max,forecastData.list[i * 8 + 4].main.temp_max, forecastData.list[i * 8 + 5].main.temp_max, forecastData.list[i * 8 + 6].main.temp_max), forecastData.list[i * 8 + 7].main.temp_max);
+					// let firstEntry = forecastData.list[i * 8]
+					let day = new Date(forecastData[i*8].dt_txt);
+					let arrayOfWeather = [forecastData[i * 8], forecastData[i * 8 + 1], forecastData[i * 8 + 2], forecastData[i * 8 + 3], forecastData[i * 8 + 4], forecastData[i * 8 + 5], forecastData[i * 8 + 6], forecastData[i * 8 + 7]];
+					// console.log(arrayOfWeather);
+					let mostFrequent = this.mostFrequent(arrayOfWeather);
+					// console.log(mostFrequent);
+					let minTemp = this.makeFarenheit(Math.min(arrayOfWeather[0].main.temp_min, arrayOfWeather[1].main.temp_min, arrayOfWeather[2].main.temp_min, arrayOfWeather[3].main.temp_min, arrayOfWeather[4].main.temp_min, arrayOfWeather[5].main.temp_min, arrayOfWeather[6].main.temp_min), arrayOfWeather[7].main.temp_min);
+					let maxTemp = this.makeFarenheit(Math.max(arrayOfWeather[0].main.temp_max, arrayOfWeather[1].main.temp_max, arrayOfWeather[2].main.temp_max, arrayOfWeather[3].main.temp_max,arrayOfWeather[4].main.temp_max, arrayOfWeather[5].main.temp_max, arrayOfWeather[6].main.temp_max), arrayOfWeather[7].main.temp_max);
 					let dayFormat = new Intl. DateTimeFormat('en-US', {weekday: 'long'}).format(day);
+					if (mostFrequent.icon.includes('n')) {
+						mostFrequent.icon = mostFrequent.icon.replace(/n/, 'd');
+						console.log(mostFrequent.icon);
+					};
 					$(`#day${i + 1}`).text(dayFormat);
 					$(`#day${i + 1}-high`).text(`High: ${maxTemp}`);
 					$(`#day${i + 1}-low`).text(`Low: ${minTemp}`);
-					$(`#day${i + 1}-icon`).attr('src', `http://openweathermap.org/img/w/${forecastData.list[i * 8 + 5].weather[0].icon}.png`)
-					console.log(forecastData.list[i * 8 + 5]);
-					$(`#day${i + 1}-description`).text(`${forecastData.list[i * 8 + 5].weather[0].main}`)
+					$(`#day${i + 1}-icon`).attr('src', `http://openweathermap.org/img/w/${mostFrequent.icon}.png`)
+					$(`#day${i + 1}-description`).text(`${mostFrequent.main}`)
+				}
+			},
+			success (forecastData) {
+				if (forecastData.list.length < 40) {
+					forecastData.list.unshift(forecastData.list[0]);
+					this.success(forecastData);
+				} else {
+					this.updatePage(forecastData.list);
 				}
 			},
 			fail (err) {
