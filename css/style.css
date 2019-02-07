@@ -1,6 +1,9 @@
 body {
-	background-color: skyblue;
+	background-color: teal;
 	font-family: 'News Cycle', sans-serif;
+	font-weight: bold;
+	text-shadow: 1px 1px 2px black;
+	color: white;
 }
 
 form {
@@ -15,7 +18,7 @@ input, button {
 #current-weather {
 	height: 400px;
 	width: 100vw;
-	background-color: pink;
+	background-color: navy;
 	display: flex;
 	flex-flow: column;
 	text-align: center;
