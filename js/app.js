@@ -120,8 +120,8 @@ const weatherApp = {
 					$(`#day${i + 1}-description`).text(`${mostFrequent.main}`)
 				}
 				if(usedDatesDayNumber.length === 6) {
-					$(`#day${1}`).text(`${new Intl.DateTimeFormat('en-US', {weekday: 'long'}).format(usedDates[0])} from ${new Intl.DateTimeFormat('en-US', {hour: 'numeric'}).format(forecastDateArray[0])}`);
-					$(`#day${6}`).text(`${new Intl.DateTimeFormat('en-US', {weekday: 'long'}).format(usedDates[5])} until ${new Intl.DateTimeFormat('en-US', {hour: 'numeric'}).format(forecastDateArray[forecastDateArray.length - 1])}`);
+					$(`#day${1}`).html(`${new Intl.DateTimeFormat('en-US', {weekday: 'long'}).format(usedDates[0])}<br/>from ${new Intl.DateTimeFormat('en-US', {hour: 'numeric'}).format(forecastDateArray[0])}`);
+					$(`#day${6}`).html(`${new Intl.DateTimeFormat('en-US', {weekday: 'long'}).format(usedDates[5])}<br/>until ${new Intl.DateTimeFormat('en-US', {hour: 'numeric'}).format(forecastDateArray[forecastDateArray.length - 1])}`);
 				} else {
 					$(`#day6-info`).css('visibility', 'hidden');
 				}
