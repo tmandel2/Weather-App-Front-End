@@ -44,7 +44,7 @@ input, button {
 	justify-content: space-around;
 }
 
-#day1-info, #day2-info, #day3-info, #day4-info, #day5-info {
+#day1-info, #day2-info, #day3-info, #day4-info, #day5-info, #day6-info {
 	text-align: center;
 	display: flex;
 	flex-flow: column;
@@ -54,7 +54,7 @@ input, button {
 	border: 1px solid gray;
 }
 
-#day1-temps, #day2-temps, #day3-temps, #day4-temps, #day5-temps {
+#day1-temps, #day2-temps, #day3-temps, #day4-temps, #day5-temps, #day6-temps {
 	display: flex;
 	justify-content: space-around;
 	text-align: center;

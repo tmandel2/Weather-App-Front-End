@@ -2,6 +2,7 @@ console.log('hi');
 
 const weatherApp = {
 	userInput: null,
+	currentDate: null,
 	startApp (input) {
 		this.userInput = input;
 		this.checkInputType();
@@ -15,7 +16,10 @@ const weatherApp = {
  		this.currentWeatherApp(this.userInput);
 	},
 	currentWeatherApp (zipCode) {
-		console.log('Weather app function');
+		let forecastDateArray = []
+		let usedDatesDayNumber = []
+		let usedDates = []
+		// console.log('Weather app function');
 		$.ajax({
 			url: `https://api.openweathermap.org/data/2.5/weather?${zipCode},us&appid=e131115e6491a3ae223530b75af706a0`,
 			method: 'GET',
@@ -31,12 +35,13 @@ const weatherApp = {
 				$('#high-temp').text(`Today's high: ${this.makeFarenheit(weatherData.main.temp_max)}F`);
 				$('#low-temp').text(`Today's low: ${this.makeFarenheit(weatherData.main.temp_min)}F`);
 				$('#current-weather-photo').attr('src', `http://openweathermap.org/img/w/${weatherData.weather[0].icon}.png`);
+				this.currentDate = new Date(Date.now()).getDate();
 			},
 			fail (err) {
 				console.error(err);
 			}
 		});
-		console.log('Forecast');
+		// console.log('Forecast');
 		$.ajax({
 			url:`https://api.openweathermap.org/data/2.5/forecast?${zipCode},us&appid=e131115e6491a3ae223530b75af706a0`,
 			method: 'GET',
@@ -61,38 +66,74 @@ const weatherApp = {
 						}
 					number = 0;
 				}
-				console.log(counterArr);
+				// console.log(counterArr);
 				return counterArr;
 			},
+			extractDates (forecastData) {
+				for (let i = 0; i < forecastData.length; i++) {
+					let date = new Date(forecastData[i].dt_txt);
+					forecastDateArray.push(date);
+				}
+				// console.log(forecastDateArray);
+				usedDates[0] = forecastDateArray[0];
+				usedDatesDayNumber[0] = forecastDateArray[0].getDate();
+				for (let i = 1; i < forecastDateArray.length; i++) {
+					if(forecastDateArray[i].getDate() !== forecastDateArray[i - 1].getDate()) {
+						usedDatesDayNumber.push(forecastDateArray[i].getDate());
+						usedDates.push(forecastDateArray[i]);
+					}
+				}
+				// console.log(usedDates);
+				// console.log(usedDatesDayNumber);
+			},
 			updatePage (forecastData) {
-				for (let i = 0; i < 5; i++) {
+				for (let i = 0; i < usedDatesDayNumber.length; i++) {
+					const arrayOfWeather = [];
+					const arrayOfMin = [];
+					const arrayOfMax = [];
 					// let firstEntry = forecastData.list[i * 8]
-					let day = new Date(forecastData[i*8].dt_txt);
-					let arrayOfWeather = [forecastData[i * 8], forecastData[i * 8 + 1], forecastData[i * 8 + 2], forecastData[i * 8 + 3], forecastData[i * 8 + 4], forecastData[i * 8 + 5], forecastData[i * 8 + 6], forecastData[i * 8 + 7]];
-					// console.log(arrayOfWeather);
+					for(let k = 0; k < forecastDateArray.length; k++) {
+						if (usedDatesDayNumber[i] === forecastDateArray[k].getDate()){
+							arrayOfWeather.push(forecastData[k]);
+						}
+					}
+					// let day = new Date(forecastData[i*8].dt_txt);
+					// let arrayOfWeather = [forecastData[i * 8], forecastData[i * 8 + 1], forecastData[i * 8 + 2], forecastData[i * 8 + 3], forecastData[i * 8 + 4], forecastData[i * 8 + 5], forecastData[i * 8 + 6], forecastData[i * 8 + 7]];
 					let mostFrequent = this.mostFrequent(arrayOfWeather);
+					for(let l = 0; l < arrayOfWeather.length; l++){
+						arrayOfMin.push(this.makeFarenheit(arrayOfWeather[l].main.temp_min));
+						arrayOfMax.push(this.makeFarenheit(arrayOfWeather[l].main.temp_max));
+					}
+					// console.log(arrayOfWeather);
+
 					// console.log(mostFrequent);
-					let minTemp = this.makeFarenheit(Math.min(arrayOfWeather[0].main.temp_min, arrayOfWeather[1].main.temp_min, arrayOfWeather[2].main.temp_min, arrayOfWeather[3].main.temp_min, arrayOfWeather[4].main.temp_min, arrayOfWeather[5].main.temp_min, arrayOfWeather[6].main.temp_min), arrayOfWeather[7].main.temp_min);
-					let maxTemp = this.makeFarenheit(Math.max(arrayOfWeather[0].main.temp_max, arrayOfWeather[1].main.temp_max, arrayOfWeather[2].main.temp_max, arrayOfWeather[3].main.temp_max,arrayOfWeather[4].main.temp_max, arrayOfWeather[5].main.temp_max, arrayOfWeather[6].main.temp_max), arrayOfWeather[7].main.temp_max);
-					let dayFormat = new Intl. DateTimeFormat('en-US', {weekday: 'long'}).format(day);
+					let minTemp = Math.min(...arrayOfMin);
+					let maxTemp = Math.max(...arrayOfMax);
 					if (mostFrequent.icon.includes('n')) {
 						mostFrequent.icon = mostFrequent.icon.replace(/n/, 'd');
-						console.log(mostFrequent.icon);
+						// console.log(mostFrequent.icon);
 					};
-					$(`#day${i + 1}`).text(dayFormat);
+					$(`#day${i + 1}`).text(new Intl.DateTimeFormat('en-US', {weekday: 'long'}).format(usedDates[i]));
 					$(`#day${i + 1}-high`).text(`High: ${maxTemp}`);
 					$(`#day${i + 1}-low`).text(`Low: ${minTemp}`);
 					$(`#day${i + 1}-icon`).attr('src', `http://openweathermap.org/img/w/${mostFrequent.icon}.png`)
 					$(`#day${i + 1}-description`).text(`${mostFrequent.main}`)
 				}
+				if(usedDatesDayNumber.length === 6) {
+					$(`#day${1}`).text(`${new Intl.DateTimeFormat('en-US', {weekday: 'long'}).format(usedDates[0])} from ${new Intl.DateTimeFormat('en-US', {hour: 'numeric'}).format(forecastDateArray[0])}`);
+					$(`#day${6}`).text(`${new Intl.DateTimeFormat('en-US', {weekday: 'long'}).format(usedDates[5])} until ${new Intl.DateTimeFormat('en-US', {hour: 'numeric'}).format(forecastDateArray[forecastDateArray.length - 1])}`);
+				} else {
+					$(`#day6-info`).css('visibility', 'hidden');
+				}
 			},
 			success (forecastData) {
-				if (forecastData.list.length < 40) {
-					forecastData.list.unshift(forecastData.list[0]);
-					this.success(forecastData);
-				} else {
+				// if (forecastData.list.length < 40) {
+				// 	forecastData.list.unshift(forecastData.list[0]);
+				// 	this.success(forecastData);
+				// } else {
+					this.extractDates(forecastData.list);
 					this.updatePage(forecastData.list);
-				}
+				// }
 			},
 			fail (err) {
 				console.error(err);
