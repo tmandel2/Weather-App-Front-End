@@ -34,7 +34,7 @@ const weatherApp = {
 				$('#descriptor').text(weatherData.weather[0].description.toUpperCase());
 				$('#high-temp').text(`Today's high: ${this.makeFarenheit(weatherData.main.temp_max)}F`);
 				$('#low-temp').text(`Today's low: ${this.makeFarenheit(weatherData.main.temp_min)}F`);
-				$('#current-weather-photo').attr('src', `http://openweathermap.org/img/w/${weatherData.weather[0].icon}.png`);
+				$('#current-weather-photo').attr('src', `https://openweathermap.org/img/w/${weatherData.weather[0].icon}.png`);
 				this.currentDate = new Date(Date.now()).getDate();
 			},
 			fail (err) {
