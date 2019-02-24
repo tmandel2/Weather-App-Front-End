@@ -51,11 +51,11 @@ const weatherApp = {
 				return Math.round(farenheit);
 			},
 			mostFrequent (weatherArray) {
-				let most = 1;
+				let most = 0;
 				let number = 0;
 				let counterArr;
-				for (let i=0; i<weatherArray.length; i++) {
-						for (let j=i; j<weatherArray.length; j++) {
+				for (let i=0; i < weatherArray.length; i++) {
+						for (let j = i; j < weatherArray.length; j++) {
 							if (weatherArray[i].weather[0].main == weatherArray[j].weather[0].main) {
 							number++;
 							}
@@ -100,6 +100,7 @@ const weatherApp = {
 					// let day = new Date(forecastData[i*8].dt_txt);
 					// let arrayOfWeather = [forecastData[i * 8], forecastData[i * 8 + 1], forecastData[i * 8 + 2], forecastData[i * 8 + 3], forecastData[i * 8 + 4], forecastData[i * 8 + 5], forecastData[i * 8 + 6], forecastData[i * 8 + 7]];
 					let mostFrequent = this.mostFrequent(arrayOfWeather);
+					// console.log(mostFrequent);
 					for(let l = 0; l < arrayOfWeather.length; l++){
 						arrayOfMin.push(this.makeFarenheit(arrayOfWeather[l].main.temp_min));
 						arrayOfMax.push(this.makeFarenheit(arrayOfWeather[l].main.temp_max));
@@ -116,7 +117,7 @@ const weatherApp = {
 					$(`#day${i + 1}`).text(new Intl.DateTimeFormat('en-US', {weekday: 'long'}).format(usedDates[i]));
 					$(`#day${i + 1}-high`).text(`High: ${maxTemp}`);
 					$(`#day${i + 1}-low`).text(`Low: ${minTemp}`);
-					$(`#day${i + 1}-icon`).attr('src', `http://openweathermap.org/img/w/${mostFrequent.icon}.png`)
+					$(`#day${i + 1}-icon`).attr('src', `https://openweathermap.org/img/w/${mostFrequent.icon}.png`)
 					$(`#day${i + 1}-description`).text(`${mostFrequent.main}`)
 				}
 				if(usedDatesDayNumber.length === 6) {
