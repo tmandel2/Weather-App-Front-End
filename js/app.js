@@ -124,7 +124,7 @@ const weatherApp = {
 					$(`#day${1}`).html(`${new Intl.DateTimeFormat('en-US', {weekday: 'long'}).format(usedDates[0])}<br/>from ${new Intl.DateTimeFormat('en-US', {hour: 'numeric'}).format(forecastDateArray[0])}`);
 					$(`#day${6}`).html(`${new Intl.DateTimeFormat('en-US', {weekday: 'long'}).format(usedDates[5])}<br/>until ${new Intl.DateTimeFormat('en-US', {hour: 'numeric'}).format(forecastDateArray[forecastDateArray.length - 1])}`);
 				} else {
-					$(`#day6-info`).css('visibility', 'hidden');
+					$(`#day6-info`).css('width', '0');
 				}
 			},
 			success (forecastData) {
